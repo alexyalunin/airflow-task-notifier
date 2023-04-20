@@ -38,7 +38,7 @@
   var urlsStatusElement = document.getElementById('urlsStatus');
 
   var defaultOptions = {
-    refreshTime: 60,
+    refreshTime: 30,
     notification: 'all'
   };
 

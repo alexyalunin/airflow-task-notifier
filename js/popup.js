@@ -76,17 +76,7 @@
     }
 
     function placeholderRotate() {
-      var placeholderUrls = [
-        'http://jenkins/ for all jobs',
-        'http://jenkins/job/my_job/ for one job',
-        'http://jenkins/job/my_view/ for view jobs'
-      ];
-
-      var i = 0;
-      urlInput.placeholder = placeholderUrls[0];
-      window.setInterval(function () {
-        urlInput.placeholder = placeholderUrls[++i % placeholderUrls.length];
-      }, 5000);
+      urlInput.placeholder = "https://.../task?dag_id=...&task_id=...&execution_date=...";
     }
 
     var jobList = document.getElementById('jobList');
@@ -108,9 +98,9 @@
       closeButton.dataset.url = url;
       closeButton.addEventListener('click', removeUrlClick);
 
-      var subJobs = node.querySelector('[data-id="jobs"]');
-      subJobs.classList.toggle('hidden', !job.jobs);
-      renderRepeat(subJobs, jobSubItemTemplate, job.jobs, renderJob);
+      // var subJobs = node.querySelector('[data-id="jobs"]');
+      // subJobs.classList.toggle('hidden', !job.jobs);
+      // renderRepeat(subJobs, jobSubItemTemplate, job.jobs, renderJob);
     }
 
     // https://momentjs.com/docs/#/displaying/fromnow/

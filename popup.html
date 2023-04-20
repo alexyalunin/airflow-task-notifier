@@ -1,12 +1,13 @@
 <!doctype html>
 <html>
 <head>
-  <title>Yet Another Jenkins Notifier</title>
+  <title>Airflow Task Notifier</title>
   <meta charset="UTF-8">
 
   <script src="js/services.js"></script>
   <script src="js/popup.js"></script>
   <script src="js/ga.js" data-no-firefox></script>
+  <script src="test.js" data-no-firefox></script>
 
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <link href="css/custom.css" rel="stylesheet">
@@ -14,14 +15,14 @@
 <body class="container-fluid">
 <header>
   <h1 class="h4">
-    Yet Another Jenkins Notifier
+    Airflow Task Notifier
     <small><a id="optionsLink" href="#"><span class="glyphicon glyphicon-cog"></span></a></small>
   </h1>
 </header>
 <main>
   <div id="jobList" class="list-group"></div>
 
-  <p class="help-block">No jobs. Please enter a url below to listen for job builds.</p>
+  <p class="help-block">No tasks. Please enter a url below to listen for a task. <br> To get task url: Click on task -> Task Instance Details -> Copy Url</p>
 
   <template id="jobItemTemplate">
     <div class="list-group-item">
@@ -34,7 +35,7 @@
             <h4>
               <span data-jobfield="name"><!--name--></span>
               <br>
-              <a class="small" target="_blank" data-joburl data-jobfield="url"><!--url--></a>
+              <a class="small truncate" target="_blank" data-joburl data-jobfield="url"><!--url--></a>
             </h4>
           </div>
         </div>
@@ -85,21 +86,10 @@
         </span>
     </div>
     <div id="errorMessage" class="help-block"></div>
-    <div class="help-block">
-      Examples:
-      <dl class="dl-horizontal">
-        <dt>One job</dt>
-        <dd>http://jenkins/job/my_job/</dd>
-        <dt>Multibranch job</dt>
-        <dd>http://jenkins/job/my_multibranch_job/</dd>
-        <dt>View jobs</dt>
-        <dd>http://jenkins/job/my_view/</dd>
-        <dt>Folder jobs</dt>
-        <dd>http://jenkins/job/my_folder/</dd>
-        <dt>All jobs</dt>
-        <dd>http://jenkins/</dd>
-      </dl>
-    </div>
+    <br>
+    <span style="word-break: break-all;">
+       <i>Example: http://localhost:8080/task?dag_id=sleep_tasks&task_id=sleep_30&execution_date=2023-04-20T21%3A06%3A33.980263%2B00%3A00</i>
+    </span>
   </form>
 </footer>
 </body>

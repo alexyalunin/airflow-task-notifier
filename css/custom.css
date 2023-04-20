@@ -69,6 +69,15 @@ body {
     animation-play-state: running;
 }
 
+.truncate {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
 @keyframes building {
     0% {
         opacity: 1;

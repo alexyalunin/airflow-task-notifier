@@ -41,8 +41,8 @@
       }
     });
 
-    var count = counts.Failure || counts.Unstable || counts.Success || 0;
-    var color = counts.Failure ? '#c9302c' : counts.Unstable ? '#f0ad4e' : '#5cb85c';
+    var count = counts.failed || counts.skipped || counts.success || 0;
+    var color = counts.failed ? '#c9302c' : counts.skipped ? '#f0ad4e' : '#5cb85c';
     chrome.browserAction.setBadgeText({text: count.toString()});
     chrome.browserAction.setBadgeBackgroundColor({color: color});
   });

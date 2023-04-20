@@ -43,10 +43,41 @@ var Services = (function () {
     }
   };
 
+  async function getTaskInstanceData(url) {
+    const urlObj = new URL(url);
+    const host = `${urlObj.protocol}//${urlObj.host}`;
+
+    // Extract dag_id, task_id, and execution_date from the given URL
+    const urlParams = new URLSearchParams(new URL(url).search);
+    const dag_id = urlParams.get('dag_id');
+    const task_id = urlParams.get('task_id');
+    const execution_date = urlParams.get('execution_date');
+
+    // Make a GET request to fetch dag_runs for the given dag_id
+    const dagRunsResponse = await fetch(`${host}/api/v1/dags/${dag_id}/dagRuns`);
+    const dagRunsData = await dagRunsResponse.json();
+
+    // Find the dag_run with matching dag_run_id
+    const dagRun = dagRunsData.dag_runs.find(dagRun => dagRun.dag_run_id.includes(execution_date));
+
+    // If dag_run is found, make a GET request to fetch task_instance for the given task_id
+    if (dagRun) {
+      console.log(`Found dag_run for dag_id: ${dag_id}, execution_date: ${execution_date}, with dag_run_id: ${dagRun.dag_run_id}`);
+      // Make a GET request to fetch task_instance for the given task_id
+      const taskInstanceResponse = await fetch(`${host}/api/v1/dags/${dag_id}/dagRuns/${dagRun.dag_run_id}/taskInstances/${task_id}`);
+      const taskInstanceData = await taskInstanceResponse.json();
+      console.log(`Fetched task_instance for task_id: ${task_id}`);
+      return taskInstanceData; // Return the state from the response
+    } else {
+      console.error(`No dag_run found for dag_id: ${dag_id} and execution_date: ${execution_date}`);
+      throw new Error(`No dag_run found for dag_id: ${dag_id} and execution_date: ${execution_date}`);
+    }
+  }
+
   // Initialize options and listen for changes
   function initOptions($rootScope, Storage) {
     $rootScope.options = {
-      refreshTime: 60,
+      refreshTime: 15,
       notification: 'all'
     };
 
@@ -83,17 +114,16 @@ var Services = (function () {
 
   function defaultJobDataService() {
     return function (url, status) {
-      var jobNameRegExp = /.*\/job\/([^/]+)(\/.*|$)/;
+      const urlParams = new URLSearchParams(new URL(url).search);
+      const task_id = urlParams.get('task_id');
       return {
-        name: decodeURI(url.replace(jobNameRegExp, '$1')),
+        name: decodeURI(task_id),
         url: decodeURI(url),
         building: false,
         status: status || '',
         statusClass: undefined,
         statusIcon: undefined,
-        lastBuildNumber: undefined,
         error: undefined,
-        jobs: undefined
       };
     }
   }
@@ -147,43 +177,29 @@ var Services = (function () {
   }
 
   function jenkinsService(defaultJobData) {
-    var xmlParser = new DOMParser();
-    var buildingRegExp = /_anime$/;
-    var colorToClass = {
-      blue: 'success', yellow: 'warning', red: 'danger'
+    var stateToClass = {
+      'success': 'success', 'skipped': 'warning', 'failed': 'danger'
     };
-    var colorToIcon = {
-      blue: 'green', yellow: 'yellow', red: 'red'
+    var stateToIcon = {
+      'success': 'green', 'skipped': 'yellow', 'failed': 'red'
     };
-    var status = {
-      blue: 'Success',
-      yellow: 'Unstable',
-      red: 'Failure',
-      aborted: 'Aborted',
-      notbuilt: 'Not built',
-      disabled: 'Disabled'
-    };
+
     var fetchOptions = {
       credentials: 'include'
     };
 
-    function jobMapping(url, data) {
-      var basicColor = (data.color || '').replace(buildingRegExp, '');
-      var lastBuild = data.lastCompletedBuild || {};
+    function jobMapping(url, taskInstanceData) {
+      // stateToClass, class is used for alerts
+      // "success" "running" "failed" "upstream_failed" "skipped" "up_for_retry" "up_for_reschedule" "queued" "none" "scheduled" "deferred" "removed" "restarting"
+      const state = taskInstanceData.state
       return {
-        name: data.displayName || data.name || data.nodeName || 'All jobs',
-        url: decodeURI(data.url || url),
-        building: buildingRegExp.test(data.color),
-        status: status[basicColor] || basicColor,
-        statusClass: colorToClass[basicColor] || '',
-        statusIcon: colorToIcon[basicColor] || 'grey',
-        lastBuildNumber: lastBuild.number || '',
-        lastBuildTime: '',
-        jobs: data.jobs && data.jobs.reduce(function (jobs, data) {
-          var job = jobMapping(null, data);
-          jobs[subJobKey(job.url)] = job;
-          return jobs;
-        }, {})
+        name: taskInstanceData.task_id || taskInstanceData.name || 'Task',
+        url: decodeURI(url),
+        building: state === 'running',
+        status: state,
+        statusClass: stateToClass[state] || '',
+        statusIcon: stateToIcon[state] || 'grey',
+        lastBuildTime: taskInstanceData.end_date,
       };
     }
 
@@ -192,39 +208,18 @@ var Services = (function () {
     }
 
     return function (url) {
-      url = url.charAt(url.length - 1) === '/' ? url : url + '/';
-
-      return fetch(url + 'api/json/', fetchOptions).then(function (res) {
-        return res.ok ? res.json() : Promise.reject(res);
-      }).then(function (data) {
-        var job = jobMapping(url, data);
-
-        if (data.jobs) {
-          return fetch(url + 'cc.xml', fetchOptions).then(function (res) {
-            return res.ok ? res.text() : Promise.reject(res);
-          }).then(function (text) {
-            var projects = xmlParser.parseFromString(text, 'text/xml').getElementsByTagName('Project');
-
-            _.forEach(projects, function (project) {
-              var url = decodeURI(project.attributes['webUrl'].value);
-              var name = subJobKey(url);
-              var lastBuildNumber = project.attributes['lastBuildLabel'].value;
-              var lastBuildTime = new Date(project.attributes['lastBuildTime'].value).toISOString();
-
-              var subJob = job.jobs[name];
-              if (subJob && !subJob.lastBuildNumber) {
-                subJob.name = name;
-                subJob.lastBuildNumber = lastBuildNumber;
-                subJob.lastBuildTime = lastBuildTime;
-              }
-            });
-
-            return job;
-          });
-        } else {
-          return job;
-        }
+      return getTaskInstanceData(url).then(function (taskInstanceData) {
+        console.log(taskInstanceData)
+        return jobMapping(url, taskInstanceData);
       });
+
+      // return fetch(url + 'api/json/', fetchOptions).then(function (res) {
+      //   return res.ok ? res.json() : Promise.reject(res);
+      // }).then(function (data) {
+      //   var job = jobMapping(url, data);
+      //
+      //   return job;
+      // });
     }
   }
 
@@ -251,24 +246,16 @@ var Services = (function () {
   function buildNotifierService($rootScope, Notification) {
     function jobNotifier(newValue, oldValue) {
       oldValue = oldValue || {};
-      if (oldValue.lastBuildNumber == newValue.lastBuildNumber)
-        return;
-
-      // Ignore new job, not built yet
-      if (newValue.status === 'Not built') {
+      if (oldValue.status === newValue.status) {
         return;
       }
 
-      var title = 'Build ' + newValue.status + '!';
-      if ($rootScope.options.notification === 'unstable' && newValue.status === 'Success' && newValue.lastBuildNumber > 1) {
-        if (oldValue.status === 'Success') {
-          return;
-        } else {
-          title = 'Build back to stable!';
-        }
+      if (newValue.status === 'running') {
+        return;
       }
 
-      var buildUrl = newValue.url + newValue.lastBuildNumber;
+      const title = 'Task is ' + newValue.status + '!';
+      const buildUrl = newValue.url;
       Notification.create(null, {
           type: 'basic',
           title: title + ' - ' + newValue.name,
