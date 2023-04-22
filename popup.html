@@ -22,7 +22,7 @@
 <main>
   <div id="jobList" class="list-group"></div>
 
-  <p class="help-block">No tasks. Please enter a url below to listen for a task. <br> To get task url: Click on task -> Task Instance Details -> Copy Url</p>
+  <p class="help-block">No tasks. <br> To get task url: click on task -> click on Task Instance Details</p>
 
   <template id="jobItemTemplate">
     <div class="list-group-item">
@@ -35,7 +35,7 @@
             <h4>
               <span data-jobfield="name"><!--name--></span>
               <br>
-              <a class="small truncate" target="_blank" data-joburl data-jobfield="url"><!--url--></a>
+              <a class="small" target="_blank" data-joburl data-jobfield="url"><!--url--></a>
             </h4>
           </div>
         </div>
@@ -88,7 +88,7 @@
     <div id="errorMessage" class="help-block"></div>
     <br>
     <span style="word-break: break-all;">
-       <i>Example: http://localhost:8080/task?dag_id=sleep_tasks&task_id=sleep_30&execution_date=2023-04-20T21%3A06%3A33.980263%2B00%3A00</i>
+       Example: <i>http://localhost:8080/task?dag_id=sleep_tasks&task_id=sleep_30&execution_date=2023-04-20T21%3A06%3A33.980263%2B00%3A00</i>
     </span>
   </form>
 </footer>

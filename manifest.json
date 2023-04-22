@@ -1,13 +1,13 @@
 {
   "manifest_version": 2,
-  "name": "Yet Another Jenkins Notifier",
-  "description": "This extension notifies you on Jenkins build results.",
-  "author": "Guillaume Girou",
-  "homepage_url": "https://github.com/ggirou/yet-another-jenkins-notifier",
-  "version": "2.3.1",
+  "name": "Airflow Task Notifier",
+  "description": "This extension notifies you on Airflow task results.",
+  "author": "Alexander Yalunin",
+  "homepage_url": "https://github.com/alexyalunin/airflow-task-notifier",
+  "version": "1.0.0",
   "applications": {
     "gecko": {
-      "id": "yet-another-jenkins-notifier@guillaume.girou",
+      "id": "airflow-task-notifier@alexander.yalunin",
       "strict_min_version": "46.0"
     }
   },
@@ -16,7 +16,7 @@
     "browser_style": false,
     "default_icon": "img/icon.png",
     "default_popup": "popup.html",
-    "default_title": "Yet Another Jenkins Notifier"
+    "default_title": "Airflow Task Notifier"
   },
   "icons": {
     "16": "img/icon16.png",

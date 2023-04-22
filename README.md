@@ -1,41 +1,42 @@
- ![Jenkins Logo](img/icon48.png) Yet Another Jenkins Notifier
+ ![Jenkins Logo](img/icon48.png) Airflow Task Notifier
 ------------------
+***
 
-This extension monitors Jenkins jobs and notifies you of build results with desktop notifications.
+<p align="center">
+<a href="https://addons.mozilla.org/addon/ublock-origin/"><img src="https://user-images.githubusercontent.com/585534/107280546-7b9b2a00-6a26-11eb-8f9f-f95932f4bfec.png" alt="Get uBlock Origin for Firefox"></a>
+<a href="https://chrome.google.com/webstore/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm"><img src="https://user-images.githubusercontent.com/585534/107280622-91a8ea80-6a26-11eb-8d07-77c548b28665.png" alt="Get uBlock Origin for Chromium"></a>
+</p>
+
+***
+
+This extension monitors Airflow tasks and notifies you of tasks results with desktop notifications.
 
 Features:  
 ✔ Pop-up notifications  
-✔ Single job, view jobs or all jobs monitoring  
-✔ Folder and Pipeline support  
-✔ Multiple Jenkins servers support  
-✔ Number of failing, unstable or stable jobs in icon badge  
-✔ Choose to be notified on every build or on every unstable build
+✔ Multiple tasks monitoring   
+✔ Number of failing, skipped or success tasks in icon badge  
+✔ Choose to be notified on every status change or never
 
-# Installation
-[![Add to Chrome](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_340x96.png)](https://chrome.google.com/webstore/detail/yet-another-jenkins-notif/cimdjdaglanfkpfpoemjkfkmjgkmahpg)
-[![Add to Firefox](screenshots/firefox.png)](https://addons.mozilla.org/en-US/firefox/addon/yet-another-jenkins-notifier/)
 
 # Screenshots
 
-![Jobs list pop-up and desktop notification](screenshots/1280x800.png)
-_____________
-![View jobs monitoring](screenshots/1280x800-view.png)
+![Jobs list pop-up and desktop notification](screenshots/notification.png)
 _____________
 ![Configuration page](screenshots/options.png)
 
 # Author
 
-This extension was created by Guillaume Girou ([Google+](https://plus.google.com/+GuillaumeGirou), [Twitter](https://twitter.com/GirouGuillaume), [GitHub](https://github.com/ggirou)).
+This extension is extended by Alexander Yalunin, based on a fork of Yet Another Jenkins Notifier created by Guillaume Girou.
 
 # Source
 
-Source code available on [GitHub](https://github.com/ggirou/yet-another-jenkins-notifier).
+Source code available on [GitHub](https://github.com/alexyalunin/airflow-task-notifier).
 
 # Bug tracker
 
-Found a bug? Please submit an issue on [GitHub](https://github.com/ggirou/yet-another-jenkins-notifier/issues/new) or even better, submit a pull request :)
+Found a bug? Please submit an issue on [GitHub](https://github.com/alexyalunin/airflow-task-notifier/issues/new) or even better, submit a pull request :)
 
 # Copyright and license
 
-Copyright 2016 Yet Another Jenkins Notifier.
-Released under [GNU General Public License v3.0](https://github.com/ggirou/yet-another-jenkins-notifier/blob/master/LICENSE).
+Copyright 2023 Airflow Task Notifier.
+Released under [GNU General Public License v3.0](https://github.com/alexyalunin/airflow-task-notifier/blob/master/LICENSE).

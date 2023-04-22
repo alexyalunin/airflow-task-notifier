@@ -76,7 +76,7 @@
     }
 
     function placeholderRotate() {
-      urlInput.placeholder = "https://.../task?dag_id=...&task_id=...&execution_date=...";
+      urlInput.placeholder = ".../task?dag_id=...&task_id=...&execution_date=...";
     }
 
     var jobList = document.getElementById('jobList');
