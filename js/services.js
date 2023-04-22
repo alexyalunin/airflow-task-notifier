@@ -250,17 +250,18 @@ var Services = (function () {
         return;
       }
 
-      if (newValue.status === 'running') {
+      if (newValue.status === 'running' || newValue.status === null) {
         return;
       }
 
-      const title = 'Task is ' + newValue.status + '!';
+      const title = 'Task update: ' + newValue.status;
       const buildUrl = newValue.url;
       Notification.create(null, {
           type: 'basic',
           title: title + ' - ' + newValue.name,
           message: buildUrl,
-          iconUrl: 'img/logo-' + newValue.statusIcon + '.svg'
+          // iconUrl: 'img/logo-' + newValue.statusIcon + '.svg'
+          iconUrl: 'img/logo.svg'
         },
         {
           onClicked: function () {
