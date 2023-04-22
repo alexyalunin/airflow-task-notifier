@@ -4,7 +4,7 @@
   "description": "This extension notifies you on Airflow task results.",
   "author": "Alexander Yalunin",
   "homepage_url": "https://github.com/alexyalunin/airflow-task-notifier",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "applications": {
     "gecko": {
       "id": "airflow-task-notifier@alexander.yalunin",
