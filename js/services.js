@@ -54,7 +54,7 @@ var Services = (function () {
     const execution_date = urlParams.get('execution_date');
 
     // Make a GET request to fetch dag_runs for the given dag_id
-    const dagRunsResponse = await fetch(`${host}/api/v1/dags/${dag_id}/dagRuns`);
+    const dagRunsResponse = await fetch(`${host}/api/v1/dags/${dag_id}/dagRuns?order_by=-execution_date`);
     const dagRunsData = await dagRunsResponse.json();
 
     // Find the dag_run with matching dag_run_id
